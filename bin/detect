@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Running heroku-buildpack-precompile"
+exit 0
