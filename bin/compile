@@ -1,19 +1,29 @@
 #!/bin/bash
 
-env_dir=$3
-echo "-----> exporting env"
-blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
-for e in $(ls $env_dir); do
-  echo "$e" | grep -qvE "$blacklist_regex" &&
-  export "$e=$(cat $env_dir/$e)"
-  :
-done
+indent() {
+  sed 's/^/       /'
+}
 
-echo "-----> Precompiling assets..."
+ENV_DIR=$3
 
-cd $1
-SKIP_CORPUS=1 bundle exec rake assets:precompile
+if [[ $(cat "$ENV_DIR/RAILS_ENV") == "production" ]]; then
+  echo "-----> Production environment, skipping precompile."
+else
+  echo "-----> exporting env"
+  blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+  for e in $(ls $ENV_DIR); do
+    echo "$e" | grep -qvE "$blacklist_regex" &&
+    export "$e=$(cat $ENV_DIR/$e)"
+    :
+  done
 
-echo "-----> Assets precompiled!"
+  echo "-----> Precompiling assets..."
+
+  cd $1
+  SKIP_CORPUS=1 bundle exec rake assets:precompile | indent
+
+  echo "-----> Assets precompiled!"
+fi
+
 echo "-----> Deleting app/assets to reduce slug size"
 rm -rf app/assets/
