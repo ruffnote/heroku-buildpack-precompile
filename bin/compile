@@ -8,9 +8,6 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-if [[ $(cat "$ENV_DIR/RAILS_ENV") == "production" ]]; then
-  echo "-----> Production environment, skipping precompile."
-else
   echo "-----> exporting env"
   blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
   for e in $(ls $ENV_DIR); do
@@ -31,7 +28,6 @@ else
   echo "-----> Assets precompiled!"
   echo "-----> Saving Assets to Cache"
   cp -r $BUILD_DIR/public/assets $CACHE_DIR
-fi
 
 echo "-----> Deleting app/assets to reduce slug size"
 rm -rf app/assets/
