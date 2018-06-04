@@ -16,8 +16,8 @@ ENV_DIR=$3
     :
   done
 
-  echo "-----> Restoring Assets from Cache (if any)"
-  cp -r $CACHE_DIR/assets $BUILD_DIR/public/
+  # echo "-----> Restoring Assets from Cache (if any)"
+  # cp -r $CACHE_DIR/assets $BUILD_DIR/public/
 
 
   echo "-----> Precompiling assets..."
@@ -26,8 +26,8 @@ ENV_DIR=$3
   SKIP_CORPUS=1 bundle exec rake assets:precompile | indent
 
   echo "-----> Assets precompiled!"
-  echo "-----> Saving Assets to Cache"
-  cp -r $BUILD_DIR/public/assets $CACHE_DIR
+  # echo "-----> Saving Assets to Cache"
+  # cp -r $BUILD_DIR/public/assets $CACHE_DIR
 
 echo "-----> Deleting app/assets to reduce slug size"
 rm -rf app/assets/
